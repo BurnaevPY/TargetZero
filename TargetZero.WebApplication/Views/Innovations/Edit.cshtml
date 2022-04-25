@@ -1,0 +1,74 @@
+﻿@using TargetZero.WebApplication.Models
+@model EditInnovationModel
+
+@{
+    ViewData["Title"] = "Изменение предложения";
+}
+<div class="text-left">
+    <h4 class="display-6">Изменение предложения № @Model.Id от @Model.CreateTime.ToString("dd.MM.yyyy")</h4>
+</div>
+
+<form asp-controller="Innovations" asp-action="Edit" method="post" asp-route-id="@Model.Id">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    @*<input type="hidden" asp-for="Id"/>*@
+    <input type="hidden" asp-for="@Model.ReturnUrl" />
+
+    <div class="row">
+        <div class="form-group mb-4 col-3">
+            <label asp-for="FilialId" class="form-label"></label>
+            <select asp-for="FilialId" asp-items="@ViewBag.Filials" class="form-select">
+                <option></option>
+            </select>
+            <span asp-validation-for="FilialId" class="text-danger"></span>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="form-group mb-4 col-6">
+            <label asp-for="CategoryId" class="form-label"></label>
+            <select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-select">
+                <option></option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group mb-4 col-12">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group mb-4 col-12">
+            <label asp-for="CurrentState" class="form-label"></label>
+            <textarea asp-for="CurrentState" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="CurrentState" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group mb-4 col-12">
+            <label asp-for="TargetState" class="form-label"></label>
+            <textarea asp-for="TargetState" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="TargetState" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group mb-4 col-12">
+            <label asp-for="Reason" class="form-label"></label>
+            <textarea asp-for="Reason" class="form-control" rows="2"></textarea>
+            <span asp-validation-for="Reason" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-outline-secondary text-uppercase ">Сохранить</button>
+    </div>
+</form>

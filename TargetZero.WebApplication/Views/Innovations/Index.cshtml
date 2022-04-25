@@ -1,0 +1,304 @@
+﻿@using TargetZero.WebApplication.Models
+@using TargetZero.WebApplication.Extensions
+@using TargetZero.WebApplication.ModelFilters
+@model InnovationListModel
+@addTagHelper *, TargetZero.WebApplication
+
+@{
+    ViewData["Title"] = "Список рацпредложений";
+}
+
+<div></div>
+<div class="text-left">
+    <h4 class="display-6">Список рацпредложений</h4>
+</div>
+
+<form asp-controller="Innovations" asp-action="Index" method="get">
+    <div class="form-inline">
+        <div class="row align-items-end mb-4">
+
+            <div class="form-group col-1">
+                <label class="form-label">№ рацпредл.</label>
+                <input type="text" name="innovationNumber" value="@Model.FilterModel.InnovationId" class="form-control" rows="3" />
+            </div>
+
+            <div class="form-group col-2">
+                <label class="form-label">Мои</label>
+                <select name="innovationTask" asp-items="@Model.FilterModel.InnovationTasks" class="form-select">
+                </select>
+            </div>
+
+            <div class="form-group col-3">
+                <label class="form-label">Категория</label>
+                <select name="categoryId" asp-items="@Model.FilterModel.Categories" class="form-select">
+                    <option>Все</option>
+                </select>
+            </div>
+
+            <div class="form-group col-1">
+                <label class="form-label">Подразделение</label>
+                <select name="filialId" asp-items="@Model.FilterModel.Filials" class="form-select">
+                    <option>Все</option>
+                </select>
+            </div>
+
+            <div class="form-group col-1">
+                <label class="form-label">Статус</label>
+                <select name="innovationStatusId" asp-items="@Model.FilterModel.InnovationStatuses" class="form-select">
+                    <option>Все</option>
+                </select>
+            </div>
+
+
+
+        </div>
+        <div class="row align-items-end mb-4">
+            <div class="form-group col-1">
+                <label class="form-label">Резолюция</label>
+                <select name="hasResolution" asp-items="@Model.FilterModel.Resolutions" class="form-select">
+                    <option>Все</option>
+                </select>
+            </div>
+
+            <div class="form-group col-1">
+                <label class="form-label">Рассмотрение</label>
+                <select name="hasConsideration" asp-items="@Model.FilterModel.Considerations" class="form-select">
+                    <option>Все</option>
+                </select>
+            </div>
+
+            <div class="form-group col-3">
+                <label class="form-label">Рассмотренные</label>
+                <select name="considerationGroupId" asp-items="@Model.FilterModel.ConsiderationGroups" class="form-select">
+                    <option>Не имеет значения</option>
+                </select>
+            </div>
+
+            <div class="form-group col-3">
+                <label class="form-label">Нерассмотренные</label>
+                <select name="nonConsiderationGroupId" asp-items="@Model.FilterModel.NonConsiderationGroups" class="form-select">
+                    <option>Не имеет значения</option>
+                </select>
+            </div>
+
+            <div class="col-2">
+                <div class="d-inline"><input type="submit" value="Фильтр" class="btn btn-outline-secondary" /></div>
+                <div class="d-inline"><a asp-controller="Innovations" asp-action="Index" class="btn btn-outline-secondary">Сброс</a></div>
+                <div class="dropdown d-inline">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="excelDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Отчеты
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="excelDropdownMenuLink">
+                        <li>
+                            <a asp-action="ToExcel" class="dropdown-item" title="Экспорт в Excel"
+                               asp-route-innovationNumber="@Model.FilterModel.InnovationId"
+                               asp-route-innovationTask="@Model.FilterModel.InnovationTask"
+                               asp-route-hasConsideration="@Model.FilterModel.HasConsideration"
+                               asp-route-hasResolution="@Model.FilterModel.HasResolution"
+                               asp-route-considerationGroupId="@Model.FilterModel.ConsiderationGroupId"
+                               asp-route-nonConsiderationGroupId="@Model.FilterModel.NonConsiderationGroupId"
+                               asp-route-innovationStatusId="@Model.FilterModel.InnovationStatusId"
+                               asp-route-filialId="@Model.FilterModel.FilialId"
+                               asp-route-categoryId="@Model.FilterModel.CategoryId">Экспорт в Excel (@Model.Count рацпредл.) </a>
+
+                        </li>
+                        @if (Model.CanGetSecurityReport)
+                        {
+                            <li>
+                                <a asp-action="ToExcelWithAuthors" class="dropdown-item" title="Экспорт в Excel"
+                                   asp-route-innovationNumber="@Model.FilterModel.InnovationId"
+                                   asp-route-innovationTask="@Model.FilterModel.InnovationTask"
+                                   asp-route-hasConsideration="@Model.FilterModel.HasConsideration"
+                                   asp-route-hasResolution="@Model.FilterModel.HasResolution"
+                                   asp-route-considerationGroupId="@Model.FilterModel.ConsiderationGroupId"
+                                   asp-route-nonConsiderationGroupId="@Model.FilterModel.NonConsiderationGroupId"
+                                   asp-route-innovationStatusId="@Model.FilterModel.InnovationStatusId"
+                                   asp-route-filialId="@Model.FilterModel.FilialId"
+                                   asp-route-categoryId="@Model.FilterModel.CategoryId">Экспорт в Excel для ОИБ </a>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+</form>
+
+
+<div class="row mb-4">
+    <div class="col-2">
+        <a asp-controller="Innovations" asp-action="New" class="btn btn-outline-secondary" title="Новое предложение">Новое предложение</a>
+    </div>
+    <div class="col-10 mt-2 text-end">
+        @ViewBag.TotalCaption: @Model.Count
+    </div>
+
+</div>
+
+<table class="table table-hover table-bordered">
+    <thead class="text-center">
+        <tr>
+            <th>
+                <nobr>
+                    @Html.DisplayNameForInnerType((InnovationItemModel x) => x.Id)
+                    <a asp-action="Index" class="link-secondary"
+                       asp-route-innovationNumber="@Model.FilterModel.InnovationId"
+                       asp-route-innovationTask="@Model.FilterModel.InnovationTask"
+                       asp-route-hasConsideration="@Model.FilterModel.HasConsideration"
+                       asp-route-hasResolution="@Model.FilterModel.HasResolution"
+                       asp-route-considerationGroupId="@Model.FilterModel.ConsiderationGroupId"
+                       asp-route-nonConsiderationGroupId="@Model.FilterModel.NonConsiderationGroupId"
+                       asp-route-innovationStatusId="@Model.FilterModel.InnovationStatusId"
+                       asp-route-filialId="@Model.FilterModel.FilialId"
+                       asp-route-categoryId="@Model.FilterModel.CategoryId"
+                       asp-route-sortOrder="@Model.SortModel.IdSort">
+                        @switch (Model.SortModel.Current)
+                        {
+                            case InnovationSortState.IdAsc:
+                                <i class="bi bi-sort-down-alt"></i>
+                                break;
+                            case InnovationSortState.IdDesc:
+                                <i class="bi bi-sort-down"></i>
+                                break;
+                            default:
+                                <i class="bi bi-text-center"></i>
+                                break;
+                        }
+                    </a>
+                </nobr>
+            </th>
+
+
+            <th>@Html.DisplayNameForInnerType((InnovationItemModel x) => x.FilialName)</th>
+            <th>@Html.DisplayNameForInnerType((InnovationItemModel x) => x.CategoryName)</th>
+            <th>
+                <nobr>
+                    @Html.DisplayNameForInnerType((InnovationItemModel x) => x.CreateTime)
+                    <a asp-action="Index" class="link-secondary"
+                       asp-route-innovationNumber="@Model.FilterModel.InnovationId"
+                       asp-route-innovationTask="@Model.FilterModel.InnovationTask"
+                       asp-route-hasConsideration="@Model.FilterModel.HasConsideration"
+                       asp-route-hasResolution="@Model.FilterModel.HasResolution"
+                       asp-route-considerationGroupId="@Model.FilterModel.ConsiderationGroupId"
+                       asp-route-nonConsiderationGroupId="@Model.FilterModel.NonConsiderationGroupId"
+                       asp-route-innovationStatusId="@Model.FilterModel.InnovationStatusId"
+                       asp-route-filialId="@Model.FilterModel.FilialId"
+                       asp-route-categoryId="@Model.FilterModel.CategoryId"
+                       asp-route-sortOrder="@Model.SortModel.CreateTimeSort">
+                        @switch (Model.SortModel.Current)
+                        {
+                            case InnovationSortState.CreateTimeAsc:
+                                <i class="bi bi-sort-down-alt"></i>
+                                break;
+                            case InnovationSortState.CreateTimeDesc:
+                                <i class="bi bi-sort-down"></i>
+                                break;
+                            default:
+                                <i class="bi bi-text-center"></i>
+                                break;
+                        }
+                    </a>
+                </nobr>
+            </th>
+            <th>@Html.DisplayNameForInnerType((InnovationItemModel x) => x.DescriptionTruncated)</th>
+            <th>@Html.DisplayNameForInnerType((InnovationItemModel x) => x.CurrentStateTrauncated)</th>
+            <th>@Html.DisplayNameForInnerType((InnovationItemModel x) => x.TargetStateTruncated)</th>
+            <th>@Html.DisplayNameForInnerType((InnovationItemModel x) => x.ReasonTruncated)</th>
+            <th title="Рассмотрили/Резолюций">
+                <nobr>
+                    <span class="h3"><i class="bi bi-eyeglasses"></i></span>
+                    <a asp-action="Index" class="link-secondary"
+                       asp-route-innovationNumber="@Model.FilterModel.InnovationId"
+                       asp-route-innovationTask="@Model.FilterModel.InnovationTask"
+                       asp-route-hasConsideration="@Model.FilterModel.HasConsideration"
+                       asp-route-hasResolution="@Model.FilterModel.HasResolution"
+                       asp-route-considerationGroupId="@Model.FilterModel.ConsiderationGroupId"
+                       asp-route-nonConsiderationGroupId="@Model.FilterModel.NonConsiderationGroupId"
+                       asp-route-innovationStatusId="@Model.FilterModel.InnovationStatusId"
+                       asp-route-filialId="@Model.FilterModel.FilialId"
+                       asp-route-categoryId="@Model.FilterModel.CategoryId"
+                       asp-route-sortOrder="@Model.SortModel.TotalSort">
+                        @switch (Model.SortModel.Current)
+                        {
+                            case InnovationSortState.TotalAsc:
+                                <i class="bi bi-sort-down-alt"></i>
+                                break;
+                            case InnovationSortState.TotalDesc:
+                                <i class="bi bi-sort-down"></i>
+                                break;
+                            default:
+                                <i class="bi bi-text-center"></i>
+                                break;
+                        }
+
+                    </a>
+                </nobr>
+            </th>
+            <th>@Html.DisplayNameForInnerType((InnovationItemModel x) => x.InnovationStatusDescription)</th>
+            <th>Операции</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Innovations)
+        {
+            <tr id="row_@item.Id">
+                <td>@Html.DisplayFor(x => item.Id)</td>
+                <td>@Html.DisplayFor(x => item.FilialName)</td>
+                <td>@Html.DisplayFor(x => item.CategoryName)</td>
+                <td>@Html.DisplayFor(x => item.CreateTime)</td>
+                <td>@Html.DisplayFor(x => item.DescriptionTruncated)</td>
+                <td>@Html.DisplayFor(x => item.CurrentStateTrauncated)</td>
+                <td>@Html.DisplayFor(x => item.TargetStateTruncated)</td>
+                <td>@Html.DisplayFor(x => item.ReasonTruncated)</td>
+                <td title="Рассмотрили: @item.ConsiderationCount, Резолюций: @item.ResolutionCount">
+                    <a asp-controller="Innovations" asp-action="View" asp-route-id="@item.Id" class="link-secondary">@item.ConsiderationCount / @item.ResolutionCount</a>
+                </td>
+                <td>@Html.DisplayFor(x => item.InnovationStatusDescription)</td>
+                <td>
+                    <a asp-controller="Innovations" asp-action="View" asp-route-id="@item.Id" class="link-secondary">Просмотр</a>
+                    @if (item.CanChangeInnovation)
+                    {
+                        <a asp-controller="Innovations" asp-action="Edit" asp-route-id="@item.Id" class="link-secondary">Изменить</a>
+                    }
+
+                    @if (item.CanWriteResolution)
+                    {
+                        <a asp-controller="Resolutions" asp-action="New" asp-route-innovationId="@item.Id" class="link-secondary">Резолюция</a>
+                    }
+                    @if (item.CanWriteConsideration)
+                    {
+                        <a asp-controller="Considerations" asp-action="Edit" asp-route-innovationid="@item.Id" class="link-secondary">Рассмотрение</a>
+                    }
+                    @*<a asp-controller="Innovations" asp-action="Remove" asp-route-id="@item.Id">Удалить</a>*@
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<page-link page-model="Model.PageModel" page-action="Index"
+           page-url-innovationNumber="@Model.FilterModel.InnovationId"
+           page-url-innovationTask="@Model.FilterModel.InnovationTask"
+           page-url-hasConsideration="@Model.FilterModel.HasConsideration"
+           page-url-hasResolution="@Model.FilterModel.HasResolution"
+           page-url-considerationGroupId="@Model.FilterModel.ConsiderationGroupId"
+           page-url-nonConsiderationGroupId="@Model.FilterModel.NonConsiderationGroupId"
+           page-url-innovationStatusId="@Model.FilterModel.InnovationStatusId"
+           page-url-filialId="@Model.FilterModel.FilialId"
+           page-url-categoryId="@Model.FilterModel.CategoryId"
+           page-url-sortorder="Model.SortModel.Current"></page-link>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", function () {
+            var obj = @Html.Raw(Json.Serialize(ViewData[Options.ScrollParameter]));
+            const scrollpos = document.querySelector('tr[id=row_' + obj + ']').getBoundingClientRect().top;
+            window.scrollTo(0, scrollpos);
+        });
+    </script>
+}

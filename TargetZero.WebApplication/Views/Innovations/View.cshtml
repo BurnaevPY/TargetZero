@@ -1,0 +1,93 @@
+﻿@using TargetZero.WebApplication.Models
+@model ViewInnovationModel
+
+@{
+    ViewData["Title"] = "Рацпредложение";
+}
+<div class="text-left">
+    <h4 class="display-6"> Рацпредложение № @Model.Innovation.Id от @Model.Innovation.CreateTime.ToString("dd.MM.yyyy")</h4>
+</div>
+
+<br />
+
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-innovation-tab" data-bs-toggle="tab" data-bs-target="#nav-innovation" type="button" role="tab" aria-controls="nav-innovation" aria-selected="false">Рацпредложение</button>
+        <button class="nav-link" id="nav-consideration-tab" data-bs-toggle="tab" data-bs-target="#nav-consideration" type="button" role="tab" aria-controls="nav-consideration" aria-selected="false">Рассмотрение</button>
+        <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false">Резолюции</button>
+    </div>
+</nav>
+
+<div class="tab-content" id="nav-tabContent">
+
+    <div class="tab-pane fade show active" id="nav-innovation" role="tabpanel" aria-labelledby="nav-innovation-tab">
+        <dl class="row mt-3">
+            <dt>@Html.DisplayNameForInnerType((InnovationCardModel x) => x.Id)</dt>
+            <dd class="mb-2">@Model.Innovation.Id</dd>
+            <dt>@Html.DisplayNameForInnerType((InnovationCardModel x) => x.FilialName)</dt>
+            <dd class="mb-2">@Model.Innovation.FilialName</dd>
+            <dt>@Html.DisplayNameForInnerType((InnovationCardModel x) => x.CategoryName)</dt>
+            <dd class="mb-2">@Model.Innovation.CategoryName</dd>
+            <dt>@Html.DisplayNameForInnerType((InnovationCardModel x) => x.Description)</dt>
+            <dd class="mb-2">@Model.Innovation.Description</dd>
+            <dt>@Html.DisplayNameForInnerType((InnovationCardModel x) => x.CurrentState)</dt>
+            <dd class="mb-2">@Model.Innovation.CurrentState</dd>
+            <dt>@Html.DisplayNameForInnerType((InnovationCardModel x) => x.TargetState)</dt>
+            <dd class="mb-2">@Model.Innovation.TargetState</dd>
+            <dt>@Html.DisplayNameForInnerType((InnovationCardModel x) => x.Reason)</dt>
+            <dd class="mb-2">@Model.Innovation.Reason</dd>
+        </dl>
+    </div>
+
+    <div class="tab-pane fade" id="nav-consideration" role="tabpanel" aria-labelledby="nav-consideration-tab">
+        <table class="table table-hover table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameForInnerType((ConsiderationModel x) => x.ConsiderationGroupName)</th>
+                    @*<th>@Html.DisplayNameForInnerType((ConsiderationModel x) => x.InnovationStatusName)</th>*@
+                    <th>@Html.DisplayNameForInnerType((ConsiderationModel x) => x.ConsiderationResultName)</th>
+                    <th>@Html.DisplayNameForInnerType((ConsiderationModel x) => x.Content)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Considerations)
+                {
+                <tr>
+                    <td>@Html.DisplayFor(x => item.ConsiderationGroupName)</td>
+                    @*<td>@Html.DisplayFor(x => item.InnovationStatusName)</td>*@
+                    <td>@Html.DisplayFor(x => item.ConsiderationResultName)</td>
+                    <td>@Html.DisplayFor(x => item.Content)</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
+        <table class="table table-hover table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameForInnerType((ResolutionHistoryModel x) => x.CreateTime)</th>
+                    <th>@Html.DisplayNameForInnerType((ResolutionHistoryModel x) => x.Content)</th>
+                    <th>@Html.DisplayNameForInnerType((ResolutionHistoryModel x) => x.InnovationStatusDescription)</th>
+                    <th>@Html.DisplayNameForInnerType((ResolutionHistoryModel x) => x.ExecutionTime)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ResolutionHistory)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => item.CreateTime)</td>
+                        <td>@Html.DisplayFor(x => item.Content)</td>
+                        <td>@Html.DisplayFor(x => item.InnovationStatusDescription)</td>
+                        <td>@Html.DisplayFor(x => item.ExecutionTime)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
