@@ -40,15 +40,7 @@ namespace TargetZero.Infrastructure.Postgres
             modelBuilder.ApplyConfiguration(new ConsiderationResultEntityTypeConfiguration());
 
             // инциализация данными
-            modelBuilder.Entity<Filial>().HasData(
-                new Filial { Id = 8, Name = "Общество" },
-                new Filial { Id = 9, Name = "МРНУ" },
-                new Filial { Id = 10, Name = "РРНУ" },
-                new Filial { Id = 11, Name = "ГРНУ" },
-                new Filial { Id = 12, Name = "ТНМ" },
-                new Filial { Id = 13, Name = "БПТОиКО" },
-                new Filial { Id = 75, Name = "ВРНПУ" },
-                new Filial { Id = 79, Name = "ЦПА" });
+            //modelBuilder.Entity<Filial>().HasData();
 
             modelBuilder.Entity<InnovationStatus>().HasData(Enumeration.GetAll<InnovationStatus>());
             modelBuilder.Entity<ConsiderationGroup>().HasData(Enumeration.GetAll<ConsiderationGroup>());
